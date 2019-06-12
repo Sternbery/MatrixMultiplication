@@ -45,7 +45,7 @@ void printMatrixMult(float a[], float b[], float c[], int x, int y, int z){
 		if( line<z){
 			std::cout<<"[";
 			for(int i=0;i<x;++i)
-				std::cout<<" "<<b[line*x+i]<<",";
+				std::cout<<" "<<c[line*x+i]<<",";
 			std::cout<<"]";
 		}
 		std::cout<<"\n";
@@ -59,7 +59,7 @@ void matrixMult(float a[], float b[], int q,int x, int y, int z){
 	for(int i = 0; i < x; ++i)
 		for(int j = 0; j < z; ++j)
 		{
-			mult[i*x+j]=0;
+			mult[j*x+i]=0;
 		}
 	
 	for(int i=0;i<x;++i){
@@ -67,7 +67,7 @@ void matrixMult(float a[], float b[], int q,int x, int y, int z){
 			for(int k=0;k<y;++k){
 				//this may not dereference correctly
 				//std::cout<<"a is of type: "<<typeid(q*x*y+i*y+j).name()<<std::endl;
-				mult[i*x+j] += a[q*x*y+i*y+j] * b[q*y*z+k*z+j];
+				mult[j*x+i] += a[q*x*y+i*y+k] * b[q*y*z+k*z+j];
 			}
 		}
 	}
@@ -82,14 +82,20 @@ void matrixMult(float a[], float b[], int q,int x, int y, int z){
 	for(int i = 0; i < x; ++i)
 		for(int j = 0; j < y; ++j)
 		{
-			ap[i*x+j]=a[q*x*y+i*y+j];
+			ap[j*x+i]=a[q*x*y+i*y+j];
 			
 		}
 	for(int i = 0; i < y; ++i)
 		for(int j = 0; j < z; ++j)
 		{
-			bp[i*x+j]=b[q*x*y+i*y+j];
+			bp[i*y+j]=b[q*x*y+i*y+j];
+			//std::cout<< bp[j*x+i]<<" \n";
 		}
+	
+	for(int i=0; i<16; ++i){
+		std::cout<<bp[i]<<" \n";
+	}
+	
 	printMatrixMult(ap,bp,mult,x,y,z);
 }
 
@@ -113,9 +119,9 @@ int main(){
 	float testFloat;
 	int fsize = sizeof(testFloat);
 
-	srand(2);
+	srand(5);
 	
-	int n = 5;
+	int n = 1;
 	int x = 1;
 	int y = 4;
 	int z = 4;
@@ -123,15 +129,16 @@ int main(){
 	int asize = x*y*fsize; 
 	int bsize = y*z*fsize;
 	
-	float a[n*x*y];
-	for(int i=0; i<n*x*y; ++i){
-	    a[i] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-	}
+	float a[n*x*y] ={1,2,3,4};
+	//for(int i=0; i<n*x*y; ++i){
+	 //   a[i] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	//}
 	
-	float b[n*y*z];
-	for(int i=0; i<n*y*z; ++i){
-	    b[i] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-	}
+	float b[n*y*z] ={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+	//for(int i=0; i<n*y*z; ++i){
+	//    b[i] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	//}
+	
 	
 	
 	multAll/*<<<numBlocks, blockSize>>>*/(a,b,n,x,y,z);
@@ -139,5 +146,3 @@ int main(){
 	printf("float size: %d", fsize);
 
 }
-
-//https://devblogs.nvidia.com/even-easier-introduction-cuda/
