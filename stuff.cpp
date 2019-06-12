@@ -88,7 +88,8 @@ void matrixMult(float a[], float b[], int q,int x, int y, int z){
 	for(int i = 0; i < y; ++i)
 		for(int j = 0; j < z; ++j)
 		{
-			bp[i*y+j]=b[q*x*y+i*y+j];
+			//flip bp[j*y+i] to bp[i*y+j]
+			bp[j*y+i]=b[q*x*y+i*y+j];
 			//std::cout<< bp[j*x+i]<<" \n";
 		}
 	
@@ -144,5 +145,4 @@ int main(){
 	multAll/*<<<numBlocks, blockSize>>>*/(a,b,n,x,y,z);
 
 	printf("float size: %d", fsize);
-
 }
